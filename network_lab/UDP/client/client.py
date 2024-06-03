@@ -8,6 +8,7 @@ from PyQt5.QtWidgets import QDialog
 import config
 from lib.TCP import Ui_TCP
 from lib.cipher import AESCipher, RSCCipher
+from network_lab.UDP.UDPconfig import AESkey
 
 
 class ClientWindow(QDialog, Ui_TCP):
@@ -24,70 +25,41 @@ class ClientWindow(QDialog, Ui_TCP):
         """初始化 GUI、套接字、密钥对和客户端的工作线程"""
         super().__init__()
         self.setupUi(self)
-        # 初始化Socket
+        # 初始化 UDP Socket 用来发送消息
         self.host = config.IP
         self.port = int(config.port)
+        self.address = (self.host, self.port)
+        self.connect = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-        print('正在尝试连接服务器：{}:{}。'.format(self.host, self.port))
-        try:
-            self.connect = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.connect.connect((self.host, self.port))
-        except:
-            print("第2次重试")
-            try:
-                self.connect = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                self.connect.connect((self.host, self.port))
-            except:
-                print('错误：根据 IP 地址和端口号找不到运行的服务器！')
-                print('请检查设置或重新运行服务器。')
-                sys.exit(-1)
+        # 获得AES加密
+        self.AESkey = AESkey
+        self.cipher = AESCipher(self.AESkey)
 
-        # 生成 RSC 密钥对
-        print('找到服务器。正在生成 RSC 密钥对并交换密钥...')
-        rsc = RSCCipher()
-        try:
-            # 将 RSC 公钥发送给服务器
-            self.connect.send(rsc.pubKeyPEM)
-            # 接收并解密 AES 密钥，初始化加密工具
-            encrypted_AESkey = bytes(self.connect.recv(1024))
-            self.AESkey = rsc.decrypt(encrypted_AESkey)
-            self.cipher = AESCipher(self.AESkey)
-            print('接收到 AES 密钥：{}。'.format(self.AESkey))
-        except:
-            print('服务器已关闭。请尝试重新运行服务器。')
-            sys.exit(-1)
+        # 初始化 UDP Socket 用来接收消息
 
-        # 初始化线程
-        print('正在启动线程...')
-        self.recv_thread = RecvThread(self.connect, self.AESkey)
-        self.recv_thread.trigger.connect(self.print_msg)
-        self.recv_thread.start()
 
         # 绑定按钮
-        self.newUser.clicked.connect(self.new_user)
+        self.newUser.clicked.connect(self.__newUser)
         self.login.clicked.connect(self.__login)
         print('所有准备工作完成。')
 
-    def new_user(self) -> None:
+    def __send(self, msg):
+        self.connect.sendto(msg, self.address)
+
+    def __newUser(self) -> None:
         username = self.username.text()
         password = self.password.text()
         msg = "newUser/username:{}?password:{}".format(username, password)
-        self.connect.send(self.cipher.encrypt(msg))
+        self.__send(self.cipher.encrypt(msg))
         print("已经发送注册请求")
 
     def __login(self) -> None:
         username = self.username.text()
         password = self.password.text()
         msg = "login/username:{}?password:{}".format(username, password)
-        self.connect.send(self.cipher.encrypt(msg))
+        self.__send(self.cipher.encrypt(msg))
         print("已经发送登录请求")
 
-    def print_msg(self, msg: str) -> None:
-        """接收消息的线程函数"""
-        # 鲁棒性
-        if msg:
-            # 刷新消息浏览器
-            self.sysInform.setText(msg)
 
 
 class RecvThread(QThread):

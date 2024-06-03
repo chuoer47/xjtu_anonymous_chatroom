@@ -16,13 +16,13 @@
 1. server启动：
 
 ```python
-python chatRoom/server/server.py
+python ./chatRoom/server/server.py
 ```
 
 2. client启动(可以生成多个):
 
 ```python
-python chatRoom/client/client.py
+python ./chatRoom/client/client.py
 ```
 
 ### 项目注意事项

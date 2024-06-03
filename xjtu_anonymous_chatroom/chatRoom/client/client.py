@@ -1,17 +1,13 @@
-import json
 import os
 import socket
 import sys
 import time
-from datetime import datetime
 
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import QThread, pyqtSignal
 from PyQt5.QtWidgets import QDialog
 
 import config
-from database.SQL import *
-from database.connectdb import getDB
 from lib.chatroom import Ui_SafeChatroom
 from lib.cipher import AESCipher, RSCCipher
 
@@ -107,8 +103,8 @@ class ClientWindow(QDialog, Ui_SafeChatroom):
         year, mon, day = t.tm_year, t.tm_mon, t.tm_mday
         fName = './history/' + str(year) + '.' + str(mon) + '.' + str(day) + '.' + str(tick) + '.hs'
         # 保存聊天记录
-        if not os.path.exists('./history'):
-            os.makedirs('./history')
+        if not os.path.exists('history'):
+            os.makedirs('history')
         with open(fName, 'w') as fp:
             fp.write(self.msg_recv)
         hint = '<System> 当前聊天记录已成功存储到 ' + fName + ' 中'

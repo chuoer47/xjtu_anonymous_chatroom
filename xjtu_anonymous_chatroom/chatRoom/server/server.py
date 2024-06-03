@@ -1,18 +1,15 @@
-import atexit
-import json
 import os
-import sqlite3
 import sys
 import threading
 import socket
 
-from chatRoom.server import config
-from database.initdb import initdb
+from xjtu_anonymous_chatroom.chatRoom.server import config
+from xjtu_anonymous_chatroom.database.initdb import initdb
 from lib.cipher import encrypt_AESkey
 from Crypto.Random import get_random_bytes
 from datetime import datetime
-from database.SQL import *
-from database.connectdb import *
+from xjtu_anonymous_chatroom.database.SQL import *
+from xjtu_anonymous_chatroom.database.connectdb import *
 
 # 获取当前文件所在目录的路径
 current_dir = os.path.dirname(os.path.abspath(__file__))

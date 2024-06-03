@@ -1,5 +1,5 @@
 """初始化文件"""
-from database.connectdb import getDB
+from xjtu_anonymous_chatroom.database.connectdb import getDB
 
 def initdb(conn, cur):
     """删除所有表格"""

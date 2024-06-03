@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="chatroom.db" uuid="32869d0f-8ef2-45ee-b3a6-ff661eb5dc89">
+    <data-source source="LOCAL" name="chatroom.db" uuid="ed5f87ca-4126-4ce5-b9d7-2d81f31cf4d9">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/chatRoom/server/chatroom.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/chatroom.db</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="TCP" uuid="7040fb4c-46ff-41b7-b413-89da9bf69295">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/network_lab/TCP/server/chatroom.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>

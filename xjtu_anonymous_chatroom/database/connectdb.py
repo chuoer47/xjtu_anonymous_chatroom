@@ -1,8 +1,6 @@
-import os
 import sqlite3
-import sys
 
-from database.config import database_path
+from xjtu_anonymous_chatroom.database.config import database_path
 
 
 def getDB():
